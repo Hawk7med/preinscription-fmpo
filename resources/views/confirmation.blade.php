@@ -46,7 +46,7 @@
 En cliquant sur « Continuer », vous reconnaissez avoir pris connaissance de cette information et acceptez que vos données soient utilisées conformément à la loi 09-08.</p>
             <input type="hidden" name="confirmed" value="true">
             <button type="submit" class="btn btn-primary">
-                <span class="fa fa-save"></span> Valider
+                <span class="fa fa-save"></span> Continuer
             </button>
         </div>
     </form>

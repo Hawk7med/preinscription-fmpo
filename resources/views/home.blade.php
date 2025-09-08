@@ -27,7 +27,7 @@
                 <div class="hero-content animate-fade-in-up">
                     <h1>Bienvenue à l'Université a Faculté de Médecine et de Pharmacie d’Oujda (FMPO)</h1>
                     <p>Commencez votre parcours académique avec nous.<br>Déposez votre candidature dès maintenant pour la préinscription au concours Passerelle FMPO – rentrée 2025.</p>
-                    <a style="margin-bottom: 15px;" class="btn btn-warning" href="{{ asset('storage/fichiers/Fiche-de-candidature Oujda .pdf') }}" download>
+                    <a style="margin-bottom: 15px;" class="btn btn-warning" href="{{ asset('storage/fichiers/Fiche-de-candidature Oujda.pdf') }}" download>
                         <span class="fa fa-download"></span>
                         Veuillez télécharger la fiche de candidature
                     </a>

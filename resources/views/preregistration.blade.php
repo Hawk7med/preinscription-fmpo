@@ -332,6 +332,27 @@
                                 <legend style="font-size: 20px; font-weight: 700; color: var(--neutral-800); margin-bottom: 24px; padding: 0;">
                                     📎 Documents Requis
                                 </legend>
+
+                                <div class="form-group">
+                                    <label for="cin_file" class="form-label">Copie de la CIN légalisée *</label>
+                                    <div class="file-upload @error('fichier_cin') is-invalid @enderror" onclick="document.getElementById('cin_file').click()">
+                                        <div class="file-upload-icon">📄</div>
+                                        <div class="file-upload-text">Cliquez pour télécharger votre CIN</div>
+                                        <div class="file-upload-subtext">PDF, JPG ou PNG - Max 2MB</div>
+                                    </div>
+                                    <input type="file" id="cin_file" name="fichier_cin" accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+                                    <div id="cin_file-preview"></div>
+                                    @if(session('temp_fichier_cin'))
+                                        <span class="invalid-file" role="alert" style="color:#F44336;">
+                                            <i class="fa fa-warning"></i> <strong>Veuillez sélectionner à nouveau votre fichier.</strong>
+                                        </span>
+                                    @endif
+                                    @error('fichier_cin')
+                                        <span class="invalid-feedback" role="alert" style="color:#F44336;">
+                                            <i class="fa fa-warning"></i> <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
                                 
                                 <div class="form-group">
                                     <label for="baccalaureat" class="form-label">Copie du Baccalauréat légalisée*</label>
@@ -513,6 +534,7 @@
         setupFileUpload('deug');
         setupFileUpload('releve_notes');
         setupFileUpload('fiche_candidature');
+        setupFileUpload('cin_file');
 
         // Validation en temps réel
         const form = document.getElementById('preregistrationForm');

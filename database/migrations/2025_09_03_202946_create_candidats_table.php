@@ -34,6 +34,7 @@ return new class extends Migration
             $table->date('date_reussite_deug');
             $table->double('moyenne_generale');
             $table->string('motivation');
+            $table->string('fichier_cin');
             $table->string('fichier_bac');
             $table->string('fichier_deug');
             $table->string('fichier_relever_notes');

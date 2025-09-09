@@ -15,6 +15,10 @@ class CandidatController extends Controller
 {
 
     public function add(Request $request){
+        // Ajout de la gestion du fichier CIN en session
+        if($request->hasFile('fichier_cin')){
+            session()->flash('temp_filename_cin', $request->file('fichier_cin')->getClientOriginalName());
+        }
         if($request->hasFile('fichier_bac')){
             session()->flash('temp_filename_bac', $request->file('fichier_bac')->getClientOriginalName());
         }
@@ -49,11 +53,21 @@ class CandidatController extends Controller
             'date_reussite_deug' => 'nullable|date|before_or_equal:today',
             'moyenne_generale' => 'nullable|numeric|min:0|max:20',
             'motivation' => 'required|string|min:10|max:1000',
+            // Ajout de la validation pour le fichier CIN
+            'fichier_cin' => 'required|file|mimes:pdf,jpeg,jpg,png|max:2048',
             'fichier_bac' => 'required|file|mimes:pdf,jpeg,jpg,png|max:2048',
             'fichier_deug' => 'required|file|mimes:pdf,jpeg,jpg,png|max:2048',
             'fichier_relever_notes' => 'required|file|mimes:pdf,jpeg,jpg,png|max:2048',
             'fichier_fiche_candidature' => 'required|file|mimes:pdf,jpeg,jpg,png|max:2048',
         ]);
+        
+        // Ajout de l'enregistrement du fichier CIN
+        $fichier_cin = null;
+        if($request->hasFile('fichier_cin')){
+            $file = $request->file('fichier_cin');
+            $fichier_cin = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public/fichiers', $fichier_cin);
+        }
         $fichier_bac = null;
         if($request->hasFile('fichier_bac')){
             $file = $request->file('fichier_bac');
@@ -101,6 +115,7 @@ class CandidatController extends Controller
             'date_reussite_deug' => $request->date_reussite_deug,
             'moyenne_generale' => $request->moyenne_generale,
             'motivation' => $request->motivation,
+            'fichier_cin' => $fichier_cin, // Ajout du champ fichier_cin dans la création
             'fichier_bac' => $fichier_bac,
             'fichier_deug' => $fichier_deug,
             'fichier_relever_notes' => $fichier_relever_notes,
@@ -178,7 +193,8 @@ class CandidatController extends Controller
             : "Liste de Tous les Candidats";
 
         $sheet->setCellValue('A1', $titleText);
-        $sheet->mergeCells('A1:S1');
+        // Mise à jour de la cellule fusionnée pour inclure la nouvelle colonne
+        $sheet->mergeCells('A1:T1');
 
         $titleStyle = [
             'font' => [
@@ -200,8 +216,10 @@ class CandidatController extends Controller
 
         $sheet->setCellValue('A2', 'Date d\'exportation: ' . date('d/m/Y H:i:s'));
         $sheet->setCellValue('A3', 'Nombre total de candidats: ' . $candidats->count());
-        $sheet->mergeCells('A2:S2');
-        $sheet->mergeCells('A3:S3');
+        // Mise à jour de la cellule fusionnée pour inclure la nouvelle colonne
+        $sheet->mergeCells('A2:T2');
+        // Mise à jour de la cellule fusionnée pour inclure la nouvelle colonne
+        $sheet->mergeCells('A3:T3');
 
         $headers = [
             'A5' => 'ID',
@@ -220,9 +238,11 @@ class CandidatController extends Controller
             'N5' => 'Date Inscription',
             'O5' => 'Statut',
             'P5' => 'Motivation',
-            'Q5' => 'Fichier BAC',
-            'R5' => 'Fichier DEUG',
-            'S5' => 'Fichier Relevé'
+            // Ajout du nouvel en-tête pour le fichier CIN
+            'Q5' => 'Fichier CIN',
+            'R5' => 'Fichier BAC',
+            'S5' => 'Fichier DEUG',
+            'T5' => 'Fichier Relevé'
         ];
 
         foreach ($headers as $cell => $value) {
@@ -248,7 +268,8 @@ class CandidatController extends Controller
                 ]
             ]
         ];
-        $sheet->getStyle('A5:S5')->applyFromArray($headerStyle);
+        // Mise à jour de la plage de style pour inclure la nouvelle colonne
+        $sheet->getStyle('A5:T5')->applyFromArray($headerStyle);
 
         $row = 6;
         foreach ($candidats as $candidat) {
@@ -268,9 +289,11 @@ class CandidatController extends Controller
             $sheet->setCellValue("N{$row}", $candidat->date_inscription ? date('d/m/Y', strtotime($candidat->date_inscription)) : '');
             $sheet->setCellValue("O{$row}", $candidat->status);
             $sheet->setCellValue("P{$row}", $candidat->motivation);
-            $sheet->setCellValue("Q{$row}", $candidat->fichier_bac ? 'Oui' : 'Non');
-            $sheet->setCellValue("R{$row}", $candidat->fichier_deug ? 'Oui' : 'Non');
-            $sheet->setCellValue("S{$row}", $candidat->fichier_relever_notes ? 'Oui' : 'Non');
+            // Ajout de la valeur du fichier CIN dans le tableau
+            $sheet->setCellValue("Q{$row}", $candidat->fichier_cin ? 'Oui' : 'Non');
+            $sheet->setCellValue("R{$row}", $candidat->fichier_bac ? 'Oui' : 'Non');
+            $sheet->setCellValue("S{$row}", $candidat->fichier_deug ? 'Oui' : 'Non');
+            $sheet->setCellValue("T{$row}", $candidat->fichier_relever_notes ? 'Oui' : 'Non');
 
             $statusColor = $this->getStatusColor($candidat->status);
             $sheet->getStyle("O{$row}")->applyFromArray([
@@ -285,7 +308,8 @@ class CandidatController extends Controller
             $row++;
         }
 
-        $dataRange = "A5:S" . ($row - 1);
+        // Mise à jour de la plage de style pour inclure la nouvelle colonne
+        $dataRange = "A5:T" . ($row - 1);
         $sheet->getStyle($dataRange)->applyFromArray([
             'borders' => [
                 'allBorders' => [
@@ -295,7 +319,8 @@ class CandidatController extends Controller
             ]
         ]);
 
-        foreach (range('A', 'S') as $column) {
+        // Mise à jour de la boucle de dimension pour inclure la nouvelle colonne
+        foreach (range('A', 'T') as $column) {
             $sheet->getColumnDimension($column)->setAutoSize(true);
         }
 

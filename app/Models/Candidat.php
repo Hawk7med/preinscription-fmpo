@@ -28,6 +28,7 @@ class Candidat extends Model
         'date_reussite_deug',
         'moyenne_generale',
         'motivation',
+        'fichier_cin',
         'fichier_bac',
         'fichier_deug',
         'fichier_relever_notes',

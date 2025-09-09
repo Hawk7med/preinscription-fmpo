@@ -166,7 +166,7 @@
                             <a class="nav-link active" data-bs-toggle="tab" href="#infos">Information Général</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#cin">Fiche de candidature</a>
+                            <a class="nav-link" data-bs-toggle="tab" href="#cin">CIN</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#baccalaureat">Baccalauréat</a>

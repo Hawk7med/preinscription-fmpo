@@ -166,6 +166,9 @@
                             <a class="nav-link active" data-bs-toggle="tab" href="#infos">Information Général</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#cin">Fiche de candidature</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#baccalaureat">Baccalauréat</a>
                         </li>
                         <li class="nav-item">
@@ -339,6 +342,11 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="cin">
+                            <div class="pt-4">
+                                <iframe src="{{ asset('storage/fichiers/'.$candidat->fichier_cin) }}" frameborder="0"></iframe>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="baccalaureat">
